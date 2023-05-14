@@ -1,25 +1,21 @@
-import logo from './logo.svg';
 import './App.css';
+import ChatCard from './components/ChatCard/ChatCard';
+import ChatList from './components/ChatList/ChatList';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <div className="App">
+            <div className="chats-list-container">
+                <header className="header">
+                    <button type="button" className="btn">
+                        Создать 
+                    </button>
+                </header>
+                <ChatList />
+            </div>
+            <ChatCard />
+        </div>
+    );
 }
 
 export default App;
