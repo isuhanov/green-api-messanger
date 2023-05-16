@@ -4,6 +4,7 @@ import axios from 'axios';
 import Message from '../Message/Message';
 import './ChatCard.css';
 
+// компонент чата
 const ChatCard = memo(({ chatId }) => {
     const [inputMessage, setInputMessage] = useState(''); // стейст для поля ввода
     const [messages, setMessages] = useState([]); // стейст для хранения сообщений
@@ -15,16 +16,21 @@ const ChatCard = memo(({ chatId }) => {
 
     useEffect(() => { // эффект рекурсивного вызов функции для постоянного мониторинга входящий уведомлений (по завершению запрос повторяется снова)
         setMessages([]);
+
         const getMessage = async () => { // функция получения сообщений
+
             axios.get(`https://api.green-api.com/waInstance${idInstance}/receiveNotification/${apiTokenInstance}`).then(({ data }) => {
                 if (data) {
+
                     // удаление сообщения из очереди 
                     axios.delete(`https://api.green-api.com/waInstance${idInstance}/DeleteNotification/${apiTokenInstance}/${data.receiptId}`).then(res => { 
-                        if (data.body.typeWebhook === 'incomingMessageReceived'  // если сообщение "входящее", "текстовое" и приходит из текущего чата, то добавить
+                        // если сообщение "входящее", "текстовое", пришло из текущего чат и результат удаления положительный, 
+                        // то добавить сообщение в массив чата
+                        if (data.body.typeWebhook === 'incomingMessageReceived' 
                                 && data.body.messageData.typeMessage === 'textMessage' 
                                 && data.body.senderData.chatId === chatId
+                                && res.data.result
                             ) {
-                            if (res.data.result) { // если результат положительный, то добавить сообщение в массив чата
                                 setMessages(prevMessages => [ // добавление нового сообщения в массив
                                     ...prevMessages,
                                     {
@@ -33,7 +39,6 @@ const ChatCard = memo(({ chatId }) => {
                                         text: data.body.messageData.textMessageData.textMessage,
                                     }
                                 ]);
-                            }
                         }
                     })
                     .then(res => getMessage()) // повторный вызов при завершении удаления
@@ -49,7 +54,7 @@ const ChatCard = memo(({ chatId }) => {
 
     
     function sendMessage() { // ф-ия отправки сообщения
-        if (inputMessage.trim().length > 0 && chatId.replace('@c.us', '').length > 0) { // отправка, если сообщение не пустое 
+        if (inputMessage.trim().length > 0 && chatId.replace('@c.us', '').length > 0) { // выполнить отправку, если сообщение не пустое 
             const body = {
                 chatId,
                 message: inputMessage

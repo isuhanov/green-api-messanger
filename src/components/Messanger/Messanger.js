@@ -3,9 +3,9 @@ import ChatCard from '../ChatCard/ChatCard';
 import './Messanger.css';
 import { useState } from 'react';
 
-
+// компонент контейнер при переходе в мессенджер
 const Messanger = ({ onLogout }) => {
-    const [selectedChat, setSelectedChat] = useState('');
+    const [selectedChat, setSelectedChat] = useState(''); // стейт для выбранного чата
 
     return (
         <>

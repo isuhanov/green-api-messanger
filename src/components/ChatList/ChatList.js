@@ -3,48 +3,49 @@ import ChatItem from '../ChatItem/ChatItem';
 import './ChatList.css';
 import axios from 'axios';
 
+// компонент списка чатов
 const ChatList = memo(({ selectedChat, selectChat, onLogout }) => {
-    const [chats, setChats] = useState(JSON.parse(localStorage.getItem('chats')) || []);
-    const [inputPhone, setInputPhone] = useState('');
-    const [error, setError] = useState('');
+    const [chats, setChats] = useState(JSON.parse(localStorage.getItem('chats')) || []); // стейт для массива чатов
+    const [inputPhone, setInputPhone] = useState(''); // стейт для поля ввода сообщений 
+    const [error, setError] = useState(''); // стейт для ошибок
 
+    // получение параметров доступа из локального хранилища
     const idInstance = JSON.parse(localStorage.getItem('user'))?.idInstance; 
     const apiTokenInstance = JSON.parse(localStorage.getItem('user'))?.apiTokenInstance;
 
     function createChat() { // ф-ия создания чата
         let phone = inputPhone.trim().toLowerCase();
 
-        if (phone.length > 0) { // если поле не пустое
+        if (phone.length > 0) {
             phone = phone.replace(/\D/g, ''); // удаление всех не числовых символов
 
-            if (phone !== '') { // если поле не пустое (то есть присутствуют числовые символы)
-                // проверка наличия аккаунта WhatsApp
+            if (phone !== '') {
                 phone = phone.replace(/^[+]/, '').replace(/^8/, '7');
+                
+                // проверка наличия аккаунта WhatsApp
                 axios.post(`https://api.green-api.com/waInstance${idInstance}/CheckWhatsapp/${apiTokenInstance}`, {
                     phoneNumber: phone
-                }).then(({ data }) => {
+                })
+                .then(({ data }) => {
                     if (data.existsWhatsapp) { // если аккаунт есть и такого номера нет в списке - создание чата
-                        if (chats.find(chat => chat === phone)) { 
-                            setError('Чат с таким номером уже есть в списке чатов');
-                        } else {
-                            setChats(prevChats => [
+                        if (chats.find(chat => chat === phone)) setError('Чат с таким номером уже есть в списке чатов');
+                        else {
+                            setChats(prevChats => [ // сохранение чата
                                 ...prevChats,
                                 phone
                             ])
+                            // очистка полей
                             setInputPhone('');
                             setError('');
                         }
-                    } else {
-                        setError('Аккаунт номера не найден, проверьте правильность написания')
-                    }
-                }).catch(err => {
-                    if (err.response.status === 400) {
-                        setError('Проверьте правильность написания номера');
-                    }
+                    } else setError('Аккаунт номера не найден, проверьте правильность написания');
                 })
-            } else {
-                setError('Проверьте правильность написания номера');
-            }
+                .catch(err => {
+                    if (err.response.status === 400) setError('Проверьте правильность написания номера');
+                });
+
+            } else setError('Проверьте правильность написания номера');
+
         } else if (phone.length === 0 && error.trim().length > 0) setError('');
     }
 

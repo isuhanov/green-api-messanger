@@ -2,26 +2,26 @@ import { useState } from 'react';
 import './LoginForm.css';
 import axios from 'axios';
 
+// компонент формы авторизации
 const LoginForm = ({ onLogin }) => {
-    const [idInstance, setIdInstance] = useState('');
-    const [apiTokenInstance, setApiTokenInstance] = useState('');
-    const [error, setError] = useState('');
+    const [idInstance, setIdInstance] = useState(''); // стейт для поля idInstance
+    const [apiTokenInstance, setApiTokenInstance] = useState(''); // стейт для поля apiTokenInstance
+    const [error, setError] = useState(''); // стейт для ошибок
 
-    function onClickLogin() {
-        if (idInstance.trim().length > 0 && apiTokenInstance.trim().length > 0) {;
-            axios.post(`https://api.green-api.com/waInstance${idInstance}/SetSettings/${apiTokenInstance}`, {
+    function onClickLogin() { // ф-ия обработчик кнопки "Войти" 
+        if (idInstance.trim().length > 0 && apiTokenInstance.trim().length > 0) {; // если поля не пустые производится настройка аккаунта и сохранение данных
+           
+            axios.post(`https://api.green-api.com/waInstance${idInstance}/SetSettings/${apiTokenInstance}`, { 
                 webhookUrl: "",
                 outgoingWebhook: "yes",
                 stateWebhook: "yes",
                 incomingWebhook: "yes"
             }).then(res => {
-                if (res.data.saveSettings) onLogin({idInstance, apiTokenInstance});
-            }).catch(err => {
-                setError('Ошибка, проверьте правильность вносимых данный');
-            });
-        } else {
-            setError('Ошибка, все поля должны быть заполнены');
-        }
+                if (res.data.saveSettings) onLogin({idInstance, apiTokenInstance}); // если сохранены настройки, то сохранить введенные данные 
+            })
+            .catch(err => setError('Ошибка, проверьте правильность вносимых данный'));
+
+        } else setError('Ошибка, все поля должны быть заполнены');
     }
 
     return (
