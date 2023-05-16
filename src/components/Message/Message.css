@@ -1,0 +1,21 @@
+.message {
+    width: fit-content;
+    max-width: 50%;
+    padding: 12px 10px;
+    border-radius: 10px;
+}
+
+.message-text {
+    color: white;
+    font-size: 13px;
+}
+
+.message.incoming {
+    background-color: #202c33;
+    align-self: flex-start;
+}
+
+.message.outgoing {
+    background-color: #005c4b;
+    align-self: flex-end;
+}
