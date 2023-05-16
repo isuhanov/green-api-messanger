@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import axios from 'axios';
 
 import Message from '../Message/Message';
 import './ChatCard.css';
 
-const ChatCard = () => {
+const ChatCard = memo(({ chatId }) => {
     const [inputMessage, setInputMessage] = useState(''); // стейст для поля ввода
     const [messages, setMessages] = useState([]); // стейст для хранения сообщений
 
@@ -12,7 +12,7 @@ const ChatCard = () => {
     const idInstance = JSON.parse(localStorage.getItem('user'))?.idInstance; 
     const apiTokenInstance = JSON.parse(localStorage.getItem('user'))?.apiTokenInstance;
 
-    const chatId = "79852701795@c.us";
+    // const chatId = "79852701795@c.us";
     
 
     useEffect(() => { // эффект рекурсивного вызов функции для постоянного мониторинга входящий уведомлений (по завершению запрос повторяется снова)
@@ -95,6 +95,6 @@ const ChatCard = () => {
             </footer>
         </div>
     );
-}
+});
 
 export default ChatCard;

@@ -10,8 +10,16 @@
     transition: background-color .1s linear;
 }
 
+.chat-item.selected {
+    background-color: #2d3e49;
+    
+}
+
 .chat-item:hover {
     background-color: #384c59;
 }
 
-.chat-name { color: white; }
+.chat-name { 
+    letter-spacing: 1px;
+    color: white;
+}

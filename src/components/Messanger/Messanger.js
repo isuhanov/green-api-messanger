@@ -1,20 +1,16 @@
 import ChatList from '../ChatList/ChatList';
 import ChatCard from '../ChatCard/ChatCard';
 import './Messanger.css';
+import { useState } from 'react';
 
 
 const Messanger = () => {
+    const [selectedChat, setSelectedChat] = useState('');
+
     return (
         <>
-            <div className="chats-list-container">
-                <header className="header">
-                    <button type="button" className="btn">
-                        Создать 
-                    </button>
-                </header>
-                <ChatList  />
-            </div>
-            <ChatCard />
+            <ChatList selectedChat={selectedChat} selectChat={setSelectedChat}/>
+            <ChatCard chatId={selectedChat + '@c.us'}/>
         </>
     );
 }
