@@ -51,3 +51,5 @@
 
 .btn-send:hover { color: #b3ccdb; }
 .btn-send:active { color: #8798a2; }
+
+.btn-send span { color: inherit; }

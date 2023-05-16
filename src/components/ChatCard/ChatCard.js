@@ -12,10 +12,9 @@ const ChatCard = memo(({ chatId }) => {
     const idInstance = JSON.parse(localStorage.getItem('user'))?.idInstance; 
     const apiTokenInstance = JSON.parse(localStorage.getItem('user'))?.apiTokenInstance;
 
-    // const chatId = "79852701795@c.us";
-    
 
     useEffect(() => { // эффект рекурсивного вызов функции для постоянного мониторинга входящий уведомлений (по завершению запрос повторяется снова)
+        setMessages([]);
         const getMessage = async () => { // функция получения сообщений
             axios.get(`https://api.green-api.com/waInstance${idInstance}/receiveNotification/${apiTokenInstance}`).then(({ data }) => {
                 if (data && data.body.typeWebhook === 'incomingMessageReceived'  // если сообщение "входящее", "текстовое" и приходит из текущего чата, то добавить
@@ -41,12 +40,12 @@ const ChatCard = memo(({ chatId }) => {
                 }
             }).catch(err => console.log(err));     
         }
-        getMessage();     
-    }, [setMessages]);
+        if (chatId.replace('@c.us', '').length > 0) getMessage();
+    }, [setMessages, chatId]);
 
     
     function sendMessage() { // ф-ия отправки сообщения
-        if (inputMessage.trim().length > 0) { // отправка, если сообщение не пустое 
+        if (inputMessage.trim().length > 0 && chatId.replace('@c.us', '').length > 0) { // отправка, если сообщение не пустое 
             const body = {
                 chatId,
                 message: inputMessage
@@ -71,19 +70,22 @@ const ChatCard = memo(({ chatId }) => {
     return (
         <div className="chat-card-container">
             <header className="header">
-                {/* <button type="button" className="btn">
-                    Создать 
-                </button> */}
+                <h2 className="subtitle">{ chatId.replace('@c.us', '').replace(/^7/, '+7') }</h2>
             </header>
             <div className="chat-card-main">
                 <div className="chat-card-main__inner">
-                    
-                    { messages.map(message => (
-                        <Message key={message.id} 
-                                typeMessage={message.type}
-                                text={message.text}          
-                        />
-                    )) }
+                    { messages.length > 0 ?
+                        messages.map(message => (
+                            <Message key={message.id} 
+                                    typeMessage={message.type}
+                                    text={message.text}          
+                            />
+                        )) 
+                      :
+                        <p className="explanation">
+                            { chatId.replace('@c.us', '').length > 0 ? `Начните чат с пользователем "${chatId.replace('@c.us', '')}"` : 'Чтобы начать чат, его нужно выбрать в панеле слева' }
+                        </p>
+                    }
                 </div>
             </div>
             <footer className="chat-card-footer">

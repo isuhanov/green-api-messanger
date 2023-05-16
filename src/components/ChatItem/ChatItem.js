@@ -6,7 +6,7 @@ const ChatItem = memo(({ phone, isSelected, onSelect }) => {
     return (
         <div onClick={() => onSelect(phone)} className={`chat-item ${isSelected && 'selected'}`}>
             <p className="chat-name">
-                { phone }
+                { phone.replace(/^7/, '+7') }
             </p>
         </div>
     );

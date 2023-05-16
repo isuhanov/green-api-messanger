@@ -24,6 +24,12 @@
     font-weight: 700; 
 }
 
+.subtitle {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 1px; 
+}
+
 .explanation {
     padding: 10px;
     font-size: 13px;

@@ -22,8 +22,6 @@ const ChatList = memo(({ selectedChat, selectChat }) => {
                 axios.post(`https://api.green-api.com/waInstance${idInstance}/CheckWhatsapp/${apiTokenInstance}`, {
                     phoneNumber: phone
                 }).then(({ data }) => {
-                    phone = phone.replace(/^7/, '+7')
-
                     if (data.existsWhatsapp) { // если аккаунт есть и такого номера нет в списке - создание чата
                         if (chats.find(chat => chat === phone)) { 
                             setError('Чат с таким номером уже есть в списке чатов');
@@ -53,16 +51,16 @@ const ChatList = memo(({ selectedChat, selectChat }) => {
     return (
         <div className="chats-list-container">
                 <header className="header">
+                    <input value={inputPhone} onChange={(e) => setInputPhone(e.target.value)} className="input" placeholder="+7xxxxxxxxxx"/>
                     <button onClick={createChat} type="button" className="btn">
                         Создать 
                     </button>
-                    <input value={inputPhone} onChange={(e) => setInputPhone(e.target.value)} className="input" placeholder="+7xxxxxxxxxx"/>
                 </header>
                 <div className="chat-list">
                     { chats.length > 0 ?
                         chats.map(chat => <ChatItem key={chat} onSelect={selectChat} phone={chat} isSelected={chat === selectedChat}/>)
                       :
-                        <p className="explanation">Чтобы создать чат - внесите номер телефона абонента и нажмите на кнопку "Cоздать" (писать слитно без лишних символов, кроме "+")</p>  
+                        <p className="explanation">Чтобы создать чат - внесите номер телефона абонента и нажмите на кнопку "Cоздать"</p>  
                     }
                     { error &&  
                         <p className="error">{ error }</p>
