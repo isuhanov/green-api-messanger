@@ -23,7 +23,6 @@ const ChatList = memo(({ selectedChat, selectChat, onLogout }) => {
                 axios.post(`https://api.green-api.com/waInstance${idInstance}/CheckWhatsapp/${apiTokenInstance}`, {
                     phoneNumber: phone
                 }).then(({ data }) => {
-                    console.log(data);
                     if (data.existsWhatsapp) { // если аккаунт есть и такого номера нет в списке - создание чата
                         if (chats.find(chat => chat === phone)) { 
                             setError('Чат с таким номером уже есть в списке чатов');
@@ -39,7 +38,6 @@ const ChatList = memo(({ selectedChat, selectChat, onLogout }) => {
                         setError('Аккаунт номера не найден, проверьте правильность написания')
                     }
                 }).catch(err => {
-                    console.log(err);
                     if (err.response.status === 400) {
                         setError('Проверьте правильность написания номера');
                     }

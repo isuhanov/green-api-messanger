@@ -15,7 +15,6 @@ const ChatCard = memo(({ chatId }) => {
 
     useEffect(() => { // эффект рекурсивного вызов функции для постоянного мониторинга входящий уведомлений (по завершению запрос повторяется снова)
         setMessages([]);
-        console.log('start message');
         const getMessage = async () => { // функция получения сообщений
             axios.get(`https://api.green-api.com/waInstance${idInstance}/receiveNotification/${apiTokenInstance}`).then(({ data }) => {
                 if (data) {
@@ -38,7 +37,7 @@ const ChatCard = memo(({ chatId }) => {
                         }
                     })
                     .then(res => getMessage()) // повторный вызов при завершении удаления
-                    .catch(err => console.log(err));
+                    .catch(err => getMessage());
                 } else {
                     getMessage(); // рекурсивный вызов функции
                 }
@@ -56,7 +55,6 @@ const ChatCard = memo(({ chatId }) => {
                 message: inputMessage
             }
 
-            console.log(body);
             axios.post(`https://api.green-api.com/waInstance${idInstance}/SendMessage/${apiTokenInstance}`, body).then(res => {
                 setMessages(prevMessages => [ // добавление нового сообщения в массив
                     ...prevMessages,
@@ -67,7 +65,7 @@ const ChatCard = memo(({ chatId }) => {
                     }
                 ])
                 setInputMessage('');
-            }).catch(err => console.log(err));
+            }).catch(err => console.log("Ошибка отправки"));
         }
     }
 
