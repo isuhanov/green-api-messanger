@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
+
 import Message from '../Message/Message';
 import './ChatCard.css';
-import axios from 'axios';
 
 const ChatCard = () => {
     const [inputMessage, setInputMessage] = useState(''); // стейст для поля ввода
     const [messages, setMessages] = useState([]); // стейст для хранения сообщений
 
-    const idInstance = '1101820349';
-    const apiTokenInstance = 'da1aae0f134b4ddbaed0b4bd67b3cb313bf971bc51af43fbbc';
+    // получение парметров доступа из локального хранилища
+    const idInstance = JSON.parse(localStorage.getItem('user'))?.idInstance; 
+    const apiTokenInstance = JSON.parse(localStorage.getItem('user'))?.apiTokenInstance;
 
     const chatId = "79852701795@c.us";
+    
 
     useEffect(() => { // эффект рекурсивного вызов функции для постоянного мониторинга входящий уведомлений (по завершению запрос повторяется снова)
         const getMessage = async () => { // функция получения сообщений
@@ -84,7 +87,7 @@ const ChatCard = () => {
                 </div>
             </div>
             <footer className="chat-card-footer">
-                <input type="text" className="chat-input" placeholder="Введите сообщение..."
+                <input type="text" className="input chat-input" placeholder="Введите сообщение..."
                         value={inputMessage} onChange={(e) => setInputMessage(e.target.value)}/>
                 <button onClick={sendMessage} type="button" className="btn-send">
                     <span className="material-symbols-outlined">send</span>

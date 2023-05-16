@@ -1,6 +1,8 @@
+import { memo } from 'react';
+
 import './Message.css';
 
-const Message = ({ typeMessage, text }) => {
+const Message = memo(({ typeMessage, text }) => {
     return (
         <div className={`message ${typeMessage}`}>
             <p className="message-text">
@@ -8,6 +10,6 @@ const Message = ({ typeMessage, text }) => {
             </p>
         </div>
     );
-}
+});
 
 export default Message;
