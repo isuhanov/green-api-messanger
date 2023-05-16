@@ -19,9 +19,12 @@ const ChatList = memo(({ selectedChat, selectChat }) => {
 
             if (phone !== '') { // если поле не пустое (то есть присутствуют числовые символы)
                 // проверка наличия аккаунта WhatsApp
+                phone = phone.replace(/^[+]/, '').replace(/^8/, '7');
+                console.log(phone);
                 axios.post(`https://api.green-api.com/waInstance${idInstance}/CheckWhatsapp/${apiTokenInstance}`, {
                     phoneNumber: phone
                 }).then(({ data }) => {
+                    console.log(data);
                     if (data.existsWhatsapp) { // если аккаунт есть и такого номера нет в списке - создание чата
                         if (chats.find(chat => chat === phone)) { 
                             setError('Чат с таким номером уже есть в списке чатов');

@@ -70,7 +70,7 @@ const ChatCard = memo(({ chatId }) => {
     return (
         <div className="chat-card-container">
             <header className="header">
-                <h2 className="subtitle">{ chatId.replace('@c.us', '').replace(/^7/, '+7') }</h2>
+                <h2 className="subtitle">{ chatId.replace('@c.us', '')}</h2>
             </header>
             <div className="chat-card-main">
                 <div className="chat-card-main__inner">
