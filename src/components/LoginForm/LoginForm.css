@@ -8,6 +8,7 @@
 }
 
 .login-form {
+    max-width: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -15,6 +16,9 @@
     gap: 20px;
 }
 
+.login-form .explanation {
+    text-align: center;
+}
 
 .filed-block input {
     width: 300px;   

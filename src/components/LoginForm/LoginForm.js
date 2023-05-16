@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './LoginForm.css';
+import axios from 'axios';
 
 const LoginForm = ({ onLogin }) => {
     const [idInstance, setIdInstance] = useState('');
@@ -7,10 +8,19 @@ const LoginForm = ({ onLogin }) => {
     const [error, setError] = useState('');
 
     function onClickLogin() {
-        if (idInstance.trim().length > 0 && apiTokenInstance.trim().length > 0) {
-            onLogin({idInstance, apiTokenInstance});
+        if (idInstance.trim().length > 0 && apiTokenInstance.trim().length > 0) {;
+            axios.post(`https://api.green-api.com/waInstance${idInstance}/SetSettings/${apiTokenInstance}`, {
+                webhookUrl: "",
+                outgoingWebhook: "yes",
+                stateWebhook: "yes",
+                incomingWebhook: "yes"
+            }).then(res => {
+                if (res.data.saveSettings) onLogin({idInstance, apiTokenInstance});
+            }).catch(err => {
+                setError('Ошибка, проверьте правильность вносимых данный');
+            });
         } else {
-            setError('Все поля должны быть заполнены');
+            setError('Ошибка, все поля должны быть заполнены');
         }
     }
 
@@ -34,6 +44,10 @@ const LoginForm = ({ onLogin }) => {
                 <button onClick={onClickLogin} className="btn form-btn">
                     Войти
                 </button>
+                <p className="explanation">
+                    ВНИМАНИЕ, для работы сервиса требуется оставить пустым параметр webhookUrl. 
+                    Сделайте это вручную, либо настройка произайдет автоматически при автооризации
+                </p>
             </div>
         </div>
     );

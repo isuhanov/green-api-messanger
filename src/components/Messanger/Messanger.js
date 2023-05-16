@@ -4,12 +4,12 @@ import './Messanger.css';
 import { useState } from 'react';
 
 
-const Messanger = () => {
+const Messanger = ({ onLogout }) => {
     const [selectedChat, setSelectedChat] = useState('');
 
     return (
         <>
-            <ChatList selectedChat={selectedChat} selectChat={setSelectedChat}/>
+            <ChatList onLogout={onLogout} selectedChat={selectedChat} selectChat={setSelectedChat}/>
             <ChatCard chatId={selectedChat + '@c.us'}/>
         </>
     );

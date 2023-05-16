@@ -3,7 +3,7 @@ import ChatItem from '../ChatItem/ChatItem';
 import './ChatList.css';
 import axios from 'axios';
 
-const ChatList = memo(({ selectedChat, selectChat }) => {
+const ChatList = memo(({ selectedChat, selectChat, onLogout }) => {
     const [chats, setChats] = useState(JSON.parse(localStorage.getItem('chats')) || []);
     const [inputPhone, setInputPhone] = useState('');
     const [error, setError] = useState('');
@@ -20,7 +20,6 @@ const ChatList = memo(({ selectedChat, selectChat }) => {
             if (phone !== '') { // если поле не пустое (то есть присутствуют числовые символы)
                 // проверка наличия аккаунта WhatsApp
                 phone = phone.replace(/^[+]/, '').replace(/^8/, '7');
-                console.log(phone);
                 axios.post(`https://api.green-api.com/waInstance${idInstance}/CheckWhatsapp/${apiTokenInstance}`, {
                     phoneNumber: phone
                 }).then(({ data }) => {
@@ -54,6 +53,9 @@ const ChatList = memo(({ selectedChat, selectChat }) => {
     return (
         <div className="chats-list-container">
                 <header className="header">
+                    <button onClick={onLogout} type="button" className="btn">
+                        Выход 
+                    </button>
                     <input value={inputPhone} onChange={(e) => setInputPhone(e.target.value)} className="input" placeholder="+7xxxxxxxxxx"/>
                     <button onClick={createChat} type="button" className="btn">
                         Создать 

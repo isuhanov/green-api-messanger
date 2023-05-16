@@ -11,11 +11,16 @@ function App() {
         localStorage.setItem('user', JSON.stringify(user)); // добавление в локальное хранилище параметров доступа
         setUser(user);
     }, [setUser]);
+
+    const logout = useCallback(() => { // ф-ия авторизации
+        localStorage.removeItem('user'); // добавление в локальное хранилище параметров доступа
+        setUser(null);
+    }, [setUser]);
     
     return (
         <div className="App">
             { user ? 
-                    <Messanger />
+                    <Messanger onLogout={logout} />
                 :
                     <LoginForm onLogin={login}/>
             }
