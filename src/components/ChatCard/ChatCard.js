@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Message from '../Message/Message';
 import './ChatCard.css';
 import axios from 'axios';
@@ -10,16 +10,47 @@ const ChatCard = () => {
     const idInstance = '1101820349';
     const apiTokenInstance = 'da1aae0f134b4ddbaed0b4bd67b3cb313bf971bc51af43fbbc';
 
+    const chatId = "79852701795@c.us";
+
+    useEffect(() => { // эффект рекурсивного вызов функции для постоянного мониторинга входящий уведомлений (по завершению запрос повторяется снова)
+        const getMessage = async () => { // функция получения сообщений
+            axios.get(`https://api.green-api.com/waInstance${idInstance}/receiveNotification/${apiTokenInstance}`).then(({ data }) => {
+                if (data && data.body.typeWebhook === 'incomingMessageReceived'  // если сообщение "входящее", "текстовое" и приходит из текущего чата, то добавить
+                        && data.body.messageData.typeMessage === 'textMessage' 
+                        && data.body.senderData.chatId === chatId
+                    ) {
+                    // удаление сообщения из очереди 
+                    axios.delete(`https://api.green-api.com/waInstance${idInstance}/DeleteNotification/${apiTokenInstance}/${data.receiptId}`).then(res => { 
+                        if (res.data.result) { // если результат положительный, то добавить сообщение в массив чата
+                            setMessages(prevMessages => [ // добавление нового сообщения в массив
+                                ...prevMessages,
+                                {
+                                    id: data.body.idMessage,
+                                    type: 'incoming',
+                                    text: data.body.messageData.textMessageData.textMessage,
+                                }
+                            ]);
+                            getMessage(); // рекурсивный вызов функции
+                        }
+                    }).catch(err => console.log(err));
+                } else {
+                    getMessage(); // рекурсивный вызов функции
+                }
+            }).catch(err => console.log(err));     
+        }
+        getMessage();     
+    }, [setMessages]);
+
+    
     function sendMessage() { // ф-ия отправки сообщения
         if (inputMessage.trim().length > 0) { // отправка, если сообщение не пустое 
             const body = {
-                chatId: "79859877839@c.us",
+                chatId,
                 message: inputMessage
             }
 
             console.log(body);
             axios.post(`https://api.green-api.com/waInstance${idInstance}/SendMessage/${apiTokenInstance}`, body).then(res => {
-                console.log(res);
                 setMessages(prevMessages => [ // добавление нового сообщения в массив
                     ...prevMessages,
                     {
@@ -32,6 +63,7 @@ const ChatCard = () => {
             }).catch(err => console.log(err));
         }
     }
+
 
     return (
         <div className="chat-card-container">
@@ -49,9 +81,6 @@ const ChatCard = () => {
                                 text={message.text}          
                         />
                     )) }
-
-                    {/* <Message typeMessage={"incoming"} />
-                    <Message typeMessage={"outgoing"} /> */}
                 </div>
             </div>
             <footer className="chat-card-footer">
