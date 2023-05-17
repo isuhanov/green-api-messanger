@@ -61,6 +61,7 @@ const ChatList = memo(({ selectedChat, selectChat, onLogout }) => {
                     </button>
                 </header>
                 <div className="chat-list">
+                    <div className="chat-list__inner">
                     { chats.length > 0 ?
                         chats.map(chat => <ChatItem key={chat} onSelect={selectChat} phone={chat} isSelected={chat === selectedChat}/>)
                       :
@@ -69,6 +70,7 @@ const ChatList = memo(({ selectedChat, selectChat, onLogout }) => {
                     { error &&  
                         <p className="error">{ error }</p>
                     }
+                    </div>
                 </div>
             </div>
     );
